@@ -5,15 +5,15 @@ module.exports = {
 		es2021: true,
 		jest: true,
 	},
-	extends: "eslint:recommended",
+	extends: 'eslint:recommended',
 	overrides: [],
 	parserOptions: {
-		ecmaVersion: "latest",
+		ecmaVersion: 'latest',
 	},
 	rules: {
-		indent: ["error", "tab"],
-		"linebreak-style": ["error", "windows"],
-		quotes: ["error", "double"],
-		semi: ["error", "always"],
+		indent: ['error', 'tab'],
+		'linebreak-style': ['error', 'windows'],
+		quotes: ['error', 'single'],
+		semi: ['error', 'always'],
 	},
 };
