@@ -1,0 +1,31 @@
+GET http://localhost:3003/api/users/ HTTP/1.1
+
+###
+
+GET http://localhost:3003/api/users/631df88097ff04115aabc8d7 HTTP/1.1
+
+###
+
+POST http://localhost:3003/api/users/ HTTP/1.1
+content-type: application/json
+
+{
+   	"userName":"meme",
+	"name":"test user",
+	"password":"12345"
+}
+
+###
+
+PUT  http://localhost:3003/api/users/631de86b2270971167e46911 HTTP/1.1
+content-type: application/json
+
+{
+   	"userName":"user1",
+	"name":"test user1",
+	"password":"12345"
+}
+
+###
+
+DELETE  http://localhost:3003/api/users/631de86b2270971167e46911 HTTP/1.1

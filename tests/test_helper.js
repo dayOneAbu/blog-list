@@ -1,4 +1,5 @@
 const Blog = require('../models/Blog');
+const User = require('../models/User');
 const initialBlogs = [
 	{
 		'title': 'test post',
@@ -12,16 +13,21 @@ const initialBlogs = [
 		'url': 'http://localhost:3001/2',
 		'likes': 0
 	},
+];
+const initialUsers = [
 	{
-		'title': 'test post3',
-		'author': 'me',
-		'url': 'http://localhost:3001/3',
-		'likes': 1
+		'userName':'user',
+		'name':'test user',
+		'password':'12345'
 	},
-
+	{
+		'userName':'user1',
+		'name':'test user1',
+		'password':'12345'
+	},
 ];
 
-const nonExistingId = async () => {
+const nonExistingBlogId = async () => {
 	const post = new Blog({
 		'title': 'test post3',
 		'author': 'me',
@@ -38,6 +44,27 @@ const postsInDB = async () => {
 	return JSON.parse(JSON.stringify(posts));
 };
 
+const nonExistingUserId = async () => {
+	const post = new User({
+		'userName':'non existing user',
+		'name':'non existing user',
+		'password':'12345'
+
+	});
+	await post.save();
+	await post.remove();
+	return post.id;
+};
+const usersInDB = async () => {
+	const users = await User.find({});
+	return JSON.parse(JSON.stringify(users));
+};
+
 module.exports = {
-	initialBlogs, nonExistingId, postsInDB
+	initialBlogs,
+	nonExistingBlogId,
+	usersInDB,
+	nonExistingUserId,
+	postsInDB,
+	initialUsers
 };

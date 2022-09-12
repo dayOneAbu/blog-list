@@ -1,0 +1,35 @@
+GET http://localhost:3003/api/blogs/ HTTP/1.1
+
+###
+
+GET http://localhost:3003/api/blogs/631eded58c9b81762323f3a7 HTTP/1.1
+
+###
+
+POST http://localhost:3003/api/blogs/ HTTP/1.1
+content-type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6Im1lbWUiLCJpZCI6IjYzMWVkZDVkNTllYjkwOTQ5MTA2NWEzNiIsImlhdCI6MTY2Mjk2NzE0NSwiZXhwIjoxNjYyOTcwNzQ1fQ.AxMKFnY2hHNnQQFWdwFi2U-kh1Rz_taINlRNjX4NKR4
+
+{
+    "title": "test post from rest client",
+    "author": "buki",
+    "url": "http://localhost:3001/1",
+    "likes": 0
+}
+
+###
+
+PUT  http://localhost:3003/api/blogs/631df9561e568091b9ca44e9 HTTP/1.1
+content-type: application/json
+
+{
+    "title": "test post",
+    "author": "him",
+    "url": "http://localhost:3001/1",
+    "likes": 3
+}
+
+###
+
+DELETE  http://localhost:3003/api/blogs/631eded58c9b81762323f3a7 HTTP/1.1
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6Im1lbWUiLCJpZCI6IjYzMWVkZDVkNTllYjkwOTQ5MTA2NWEzNiIsImlhdCI6MTY2Mjk2NzE0NSwiZXhwIjoxNjYyOTcwNzQ1fQ.AxMKFnY2hHNnQQFWdwFi2U-kh1Rz_taINlRNjX4NKR4

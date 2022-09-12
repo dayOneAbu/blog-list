@@ -2,17 +2,21 @@ const mongoose = require('mongoose');
 const supertest = require('supertest');
 const app = require('../app');
 const Blog = require('../models/Blog');
-const { initialBlogs, postsInDB, nonExistingId } = require('./test_helper');
+const { initialBlogs, postsInDB, nonExistingBlogId } = require('./test_helper');
 
 const api = supertest(app);
-
-
+// let token;
 beforeEach(async () => {
 	await Blog.deleteMany({});
 	console.log('cleared');
-	await Blog.insertMany(initialBlogs);
+	const newPosts = initialBlogs.map(item=>{
+		return{
+			...item,
+			user:'631ed979ef7560469bcd737d'
+		};
+	});
+	await Blog.insertMany(newPosts);
 	console.log('added');
-
 },100000);
 
 describe('when there is initial posts',()=>{
@@ -40,13 +44,13 @@ describe('retrieving a single post',()=>{
 		expect(200);
 	});
 	test('fails with a invalid id', async () => {
-		const postWithInvalidID = await nonExistingId();
+		const postWithInvalidID = await nonExistingBlogId();
 		await api.get(`/api/blogs${postWithInvalidID}`);
 		expect(400);
 	});
 });
 
-describe('creating new posts',()=>{
+describe('creating new blog posts',()=>{
 	test('a valid Blog can be added', async () => {
 		const newPost = {
 			'title': 'test post4',
@@ -57,6 +61,7 @@ describe('creating new posts',()=>{
 		};
 		await api
 			.post('/api/blogs')
+			.set('Authorization','bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6Im1lbWUiLCJpZCI6IjYzMWVkZDVkNTllYjkwOTQ5MTA2NWEzNiIsImlhdCI6MTY2Mjk2NzE0NSwiZXhwIjoxNjYyOTcwNzQ1fQ.AxMKFnY2hHNnQQFWdwFi2U-kh1Rz_taINlRNjX4NKR4')
 			.send(newPost)
 			.expect(201)
 			.expect('Content-Type', /application\/json/);
@@ -72,6 +77,7 @@ describe('creating new posts',()=>{
 		};
 		await api
 			.post('/api/blogs')
+			.set('Authorization','bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6Im1lbWUiLCJpZCI6IjYzMWVkZDVkNTllYjkwOTQ5MTA2NWEzNiIsImlhdCI6MTY2Mjk2NzE0NSwiZXhwIjoxNjYyOTcwNzQ1fQ.AxMKFnY2hHNnQQFWdwFi2U-kh1Rz_taINlRNjX4NKR4')
 			.send(newPost)
 			.expect(201);
 		const posts = await postsInDB();
@@ -84,6 +90,7 @@ describe('creating new posts',()=>{
 		};
 		await api
 			.post('/api/blogs')
+			.set('Authorization','bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6Im1lbWUiLCJpZCI6IjYzMWVkZDVkNTllYjkwOTQ5MTA2NWEzNiIsImlhdCI6MTY2Mjk2NzE0NSwiZXhwIjoxNjYyOTcwNzQ1fQ.AxMKFnY2hHNnQQFWdwFi2U-kh1Rz_taINlRNjX4NKR4')
 			.send(newPost)
 			.expect(400);
 		const posts = await postsInDB();
@@ -91,18 +98,20 @@ describe('creating new posts',()=>{
 	},100000);
 });
 describe('deletion of a post',()=>{
+
 	test('succeeds with a valid id', async () => {
+
 		const postsAtStart = await postsInDB();
-		await api.delete(`/api/blogs/${postsAtStart[0].id}`);
+		await api.delete(`/api/blogs/${postsAtStart[0].id}`).set('Authorization','bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6Im1lbWUiLCJpZCI6IjYzMWVkZDVkNTllYjkwOTQ5MTA2NWEzNiIsImlhdCI6MTY2Mjk2NzE0NSwiZXhwIjoxNjYyOTcwNzQ1fQ.AxMKFnY2hHNnQQFWdwFi2U-kh1Rz_taINlRNjX4NKR4');
 		expect(204);
 		const postsAtEnd = await postsInDB();
 		expect(postsAtEnd).toHaveLength(initialBlogs.length - 1);
-	});
+	},10000);
 	test('fails with a invalid id', async () => {
-		const postWithInvalidID = await nonExistingId();
-		await api.delete(`/api/blogs/${postWithInvalidID}`);
+		const postWithInvalidID = await nonExistingBlogId();
+		await api.delete(`/api/blogs/${postWithInvalidID}`).set('Authorization','bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6Im1lbWUiLCJpZCI6IjYzMWVkZDVkNTllYjkwOTQ5MTA2NWEzNiIsImlhdCI6MTY2Mjk2NzE0NSwiZXhwIjoxNjYyOTcwNzQ1fQ.AxMKFnY2hHNnQQFWdwFi2U-kh1Rz_taINlRNjX4NKR4');
 		expect(400);
-	});
+	},10000);
 });
 describe('modifying of a post',()=>{
 	test('succeeds with a valid id', async () => {
@@ -111,7 +120,7 @@ describe('modifying of a post',()=>{
 		expect(after.body.likes).toEqual(before[0].likes + 1);
 	});
 	test('fails with a invalid id', async () => {
-		const postWithInvalidID = await nonExistingId();
+		const postWithInvalidID = await nonExistingBlogId();
 		await api.delete(`/api/blogs/${postWithInvalidID}`);
 		expect(400);
 	});
