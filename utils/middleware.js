@@ -16,31 +16,27 @@ const unknownEndpoint = (request, response) => {
 const tokenExtractor = (req) => {
 	const authorization = req.get('authorization');
 	if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
-		return  authorization.substring(7);
+		return authorization.substring(7);
 	}
 };
 const userExtractor = (req, res, next) => {
 	const token = tokenExtractor(req);
 	if (!token) {
-	  return res.status(401).json({
-			success: false,
-			message: 'No token, access denied',
-	  });
+		return res.status(401).json({
+			error: 'No token, access denied',
+		});
 	}
-	  jwt.verify(token, SECRET, (error, decoded) => {
+	jwt.verify(token, SECRET, (error, decoded) => {
 		if (error) {
-		  return res.status(401).json({
-				success: false,
-				message: 'token not valid',
-		  });
+			return res.status(401).json({
+				error: 'token not valid',
+			});
 		} else {
-		 req.user = decoded.id;
-		 next();
+			req.user = decoded.id;
+			next();
 		}
-	  });
-
+	});
 };
-
 
 const errorHandler = (error, request, response, next) => {
 	logger.error(error.message);
@@ -49,13 +45,13 @@ const errorHandler = (error, request, response, next) => {
 		return response.status(400).send({ error: 'malformatted id' });
 	} else if (error.name === 'ValidationError') {
 		return response.status(400).json({ error: error.message });
-	}else if (error.name === 'JsonWebTokenError') {
+	} else if (error.name === 'JsonWebTokenError') {
 		return response.status(401).json({
-			error: 'invalid token'
+			error: 'invalid token',
 		});
 	} else if (error.name === 'TokenExpiredError') {
 		return response.status(401).json({
-			error: 'token expired'
+			error: 'token expired',
 		});
 	}
 
@@ -66,5 +62,6 @@ module.exports = {
 	requestLogger,
 	unknownEndpoint,
 	errorHandler,
-	tokenExtractor,userExtractor
+	tokenExtractor,
+	userExtractor,
 };
