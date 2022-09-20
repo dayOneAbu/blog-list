@@ -41,8 +41,7 @@ blogRouter.put('/:id', userExtractor, async (req, res) => {
 			likes: likes + 1,
 		},
 		{ new: true, runValidators: true, context: 'query' }
-	);
-
+	).populate('user');
 	res.status(201).json(result);
 });
 blogRouter.delete('/:id', userExtractor, async (req, res) => {
