@@ -30,6 +30,17 @@ blogRouter.post('/', userExtractor, async (req, res) => {
 	await user.save();
 	res.status(201).json(result);
 });
+blogRouter.post('/:id/comments', async (req, res) => {
+	const { comment } = req.body;
+	const blog = await Blog.findById(req.params.id);
+	if (!blog) {
+		return res.status(404).end();
+	}
+	blog.comments.unshift(comment);
+	const result = await blog.save();
+
+	res.status(201).json(result);
+});
 blogRouter.put('/:id', userExtractor, async (req, res) => {
 	const { title, author, url, likes } = req.body;
 	const result = await Blog.findByIdAndUpdate(

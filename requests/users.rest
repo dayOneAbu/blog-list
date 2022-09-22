@@ -10,8 +10,8 @@ POST http://localhost:3003/api/users/ HTTP/1.1
 content-type: application/json
 
 {
-   	"userName":"meme",
-	"name":"test user",
+   	"userName":"meme1",
+	"name":"test user1",
 	"password":"12345"
 }
 

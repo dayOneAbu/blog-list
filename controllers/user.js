@@ -20,7 +20,7 @@ userRouter.get('/me', userExtractor, async (req, res) => {
 	res.status(200).json(users);
 });
 userRouter.get('/:id', async (req, res) => {
-	const user = await User.findById(req.params.id);
+	const user = await User.findById(req.params.id).populate('blogs');
 	if (!user) {
 		return res.status(404).end();
 	}
